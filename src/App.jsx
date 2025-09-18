@@ -1,17 +1,17 @@
-import { createRoot } from "react-dom/client";
-import { Order, PizzaOfTheDay, Header } from "./components";
 import { StrictMode } from "react";
-import { OrderContextProvider } from "./context";
+import { createRoot } from "react-dom/client";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { routeTree } from "./routeTree.gen";
 
-const App = () => (
-  <StrictMode>
-    <OrderContextProvider>
-      <Header />
-      <Order />
-      <PizzaOfTheDay />
-    </OrderContextProvider>
-  </StrictMode>
-);
+const router = createRouter({ routeTree });
+
+const App = () => {
+  return (
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>
+  );
+};
 
 const container = document.getElementById("root");
 const root = createRoot(container);
