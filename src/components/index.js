@@ -4,3 +4,4 @@ export * from "./Header";
 export * from "./Order";
 export * from "./PastOrders";
 export * from "./OrderDetails";
+export * from "./ContactForm";

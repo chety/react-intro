@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getPastOrders } from "../api";
 import { OrderDetails } from "./OrderDetails";
+import ErrorBoundary from "./ErrorBoundary";
 
-export const PastOrders = () => {
+const PastOrdersInternal = () => {
   const [page, setPage] = useState(1);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const { data, isLoading, error } = useQuery({
@@ -55,5 +56,13 @@ export const PastOrders = () => {
         />
       ) : null}
     </div>
+  );
+};
+
+export const PastOrders = () => {
+  return (
+    <ErrorBoundary>
+      <PastOrdersInternal />
+    </ErrorBoundary>
   );
 };
