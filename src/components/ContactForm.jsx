@@ -13,23 +13,42 @@ export const ContactForm = () => {
       );
     },
   });
+  const { mutate, isPending, isSuccess, isError, error } = mutation;
 
-  if (mutation.isError) {
-    return <div>Error: {mutation.error.message}</div>;
+  if (isError) {
+    return <div>Error: {error.message}</div>;
   }
 
   return (
-    <div className="contact">
+    <div className="contact" data-testid="contact-form">
       <h2>Contact Us</h2>
-      {mutation.isSuccess ? (
+      {isSuccess ? (
         <h3>Message sent</h3>
       ) : (
-        <form onSubmit={mutation.mutate}>
-          <input name="name" type="text" placeholder="Name" />
-          <input name="email" type="email" placeholder="Email" />
-          <textarea name="message" placeholder="Message" />
-          <button type="submit" disabled={mutation.isPending}>
-            {mutation.isPending ? "Sending..." : "Submit"}
+        <form onSubmit={mutate}>
+          <input
+            name="name"
+            type="text"
+            placeholder="Name"
+            data-testid="name-input"
+          />
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            data-testid="email-input"
+          />
+          <textarea
+            name="message"
+            placeholder="Message"
+            data-testid="message-input"
+          />
+          <button
+            type="submit"
+            disabled={isPending}
+            data-testid="submit-button"
+          >
+            {isPending ? "Sending..." : "Submit"}
           </button>
         </form>
       )}
