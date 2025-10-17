@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState } from "react";
 
-const OrderContext = createContext([[], () => {}]);
+export const OrderContext = createContext([[], () => {}]);
 
 export const OrderContextProvider = ({ children }) => {
   const [cart, setCart] = useState([]);

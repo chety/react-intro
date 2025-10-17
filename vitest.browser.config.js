@@ -11,7 +11,11 @@ export default defineConfig({
     browser: {
       provider: "playwright",
       enabled: true,
-      name: "firefox",
+      instances: [
+        {
+          browser: "chromium",
+        },
+      ],
     },
   },
 });
