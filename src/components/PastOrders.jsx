@@ -1,20 +1,12 @@
-import { useState } from "react";
+import { useState, use, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getPastOrders } from "../api";
 import { OrderDetails } from "./OrderDetails";
 import ErrorBoundary from "./ErrorBoundary";
 
-const PastOrdersInternal = () => {
-  const [page, setPage] = useState(1);
+const PastOrdersInternal = ({ page, setPage, promise }) => {
+  const data = use(promise);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["past-orders", page],
-    queryFn: () => getPastOrders(page),
-    staleTime: 30_000,
-  });
-
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div className="past-orders">
@@ -60,9 +52,25 @@ const PastOrdersInternal = () => {
 };
 
 export const PastOrders = () => {
+  const [page, setPage] = useState(1);
+  const { promise } = useQuery({
+    queryKey: ["past-orders", page],
+    queryFn: () => getPastOrders(page),
+    staleTime: 30_000,
+  });
+
   return (
     <ErrorBoundary>
-      <PastOrdersInternal />
+      <Suspense
+        fallback={
+          <div className="past-orders">
+            <h2>Loading past orders...</h2>
+          </div>
+        }
+        errorElement={(error) => <div>Error: {error.toString()}</div>}
+      >
+        <PastOrdersInternal page={page} setPage={setPage} promise={promise} />
+      </Suspense>
     </ErrorBoundary>
   );
 };

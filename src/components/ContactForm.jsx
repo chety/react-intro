@@ -1,19 +1,32 @@
 import { useMutation } from "@tanstack/react-query";
 import { postContact } from "../api";
 
+const InputForm = ({ name, type, placeholder, disabled }) => {
+  return (
+    <input
+      name={name}
+      type={type}
+      placeholder={placeholder}
+      disabled={disabled}
+      data-testid={`${name}-input`}
+    />
+  );
+};
 export const ContactForm = () => {
   const mutation = useMutation({
-    mutationFn: (e) => {
-      e.preventDefault();
-      const data = new FormData(e.target);
-      return postContact(
-        data.get("name"),
-        data.get("email"),
-        data.get("message"),
-      );
+    mutationFn: ({ name, email, message }) => {
+      return postContact(name, email, message);
     },
   });
-  const { mutate, isPending, isSuccess, isError, error } = mutation;
+  const { isPending, isSuccess, isError, error } = mutation;
+
+  const handleSubmit = async (formData) => {
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const message = formData.get("message");
+
+    mutation.mutate({ name, email, message });
+  };
 
   if (isError) {
     return <div>Error: {error.message}</div>;
@@ -25,23 +38,24 @@ export const ContactForm = () => {
       {isSuccess ? (
         <h3>Message sent</h3>
       ) : (
-        <form onSubmit={mutate}>
-          <input
+        <form action={handleSubmit}>
+          <InputForm
             name="name"
             type="text"
             placeholder="Name"
-            data-testid="name-input"
+            disabled={isPending}
           />
-          <input
+          <InputForm
             name="email"
             type="email"
             placeholder="Email"
-            data-testid="email-input"
+            disabled={isPending}
           />
           <textarea
             name="message"
             placeholder="Message"
             data-testid="message-input"
+            disabled={isPending}
           />
           <button
             type="submit"

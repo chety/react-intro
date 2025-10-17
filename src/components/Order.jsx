@@ -37,8 +37,7 @@ export const Order = () => {
     setCart([]);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     setCart([
       ...cart,
       { pizza: selectedPizza, size: selectedPizzaSize, price: currentPrice },
@@ -49,7 +48,7 @@ export const Order = () => {
     <div className="order-page">
       <div className="order">
         <h2>Create Order</h2>
-        <form onSubmit={handleSubmit}>
+        <form action={handleSubmit}>
           <div>
             <div>
               <label htmlFor="pizza-type">Pizza Type</label>
